@@ -2,6 +2,8 @@
 
 Una suite di componenti React per eseguire test unitari direttamente nel browser. Include un motore di esecuzione (`TestComponent`) e un'interfaccia demo completa (`TestDemo`).
 
+🔗 **Demo Live:** https://browser-test-runner.netlify.app/
+
 ## 🚀 Getting Started
 
 Il componente principale per l'integrazione è `TestComponent`. Ecco come usarlo:
