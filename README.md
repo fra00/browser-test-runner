@@ -1,17 +1,17 @@
 # React In-Browser Test Runner
 
-Una suite di componenti React per eseguire test unitari direttamente nel browser. Include un motore di esecuzione (`TestComponent`) e un'interfaccia demo completa (`TestDemo`).
+A suite of React components to run unit tests directly in the browser. Includes an execution engine (`TestComponent`) and a complete demo interface (`TestDemo`).
 
-🔗 **Demo Live:** https://browser-test-runner.netlify.app/
+🔗 **Live Demo:** https://browser-test-runner.netlify.app/
 
 ## 🚀 Getting Started
 
-Il componente principale per l'integrazione è `TestComponent`. Ecco come usarlo:
+The main component for integration is `TestComponent`. Here is how to use it:
 
 ```jsx
 import TestComponent from "./testing/TestComponent";
 
-// 1. Definisci i file (sorgente e test)
+// 1. Define files (source and test)
 const files = {
   "/Button.jsx": { path: "/Button.jsx", content: "...", isFolder: false },
   "/Button.test.jsx": {
@@ -21,48 +21,48 @@ const files = {
   },
 };
 
-// 2. Renderizza il runner
+// 2. Render the runner
 <TestComponent files={files} testFilePaths={["/Button.test.jsx"]} />;
 ```
 
-## 📋 Prerequisiti
+## 📋 Prerequisites
 
-Per integrare questo componente, il progetto di destinazione deve utilizzare:
+To integrate this component, the target project must use:
 
-- **React** (v16.8+ per il supporto agli Hooks)
-- **Tailwind CSS** (per lo styling dell'interfaccia)
-- **Vite** (consigliato per il supporto nativo agli import `?raw`) o un bundler configurato per caricare file come stringhe raw.
+- **React** (v16.8+ for Hooks support)
+- **Tailwind CSS** (for interface styling)
+- **Vite** (recommended for native `?raw` import support) or a bundler configured to load files as raw strings.
 
-## 🛠️ Installazione
+## 🛠️ Installation
 
-1. **Copia la cartella**: Copia l'intera directory `src/testing` nel tuo progetto (ad esempio in `src/components/testing`).
+1. **Copy the folder**: Copy the entire `src/testing` directory into your project (e.g., into `src/components/testing`).
 
-   File necessari:
-   - `TestDemo.jsx` (Componente UI principale)
-   - `TestComponent.jsx` (Runner dei test autonomo)
-   - `TestTransformer.js` (Gestione della compilazione/transpiling)
-   - `TestSandbox.js` (Ambiente di esecuzione isolato)
-   - `VitestCompatibleRunner.js` (Motore di test compatibile con Jest/Vitest)
+   Required files:
+   - `TestDemo.jsx` (Main UI Component)
+   - `TestComponent.jsx` (Standalone Test Runner)
+   - `TestTransformer.js` (Compilation/transpiling management)
+   - `TestSandbox.js` (Isolated execution environment)
+   - `VitestCompatibleRunner.js` (Jest/Vitest compatible test engine)
 
-2. **Installa le dipendenze di parsing**:
-   Il trasformatore utilizza `acorn` per analizzare il codice in sicurezza.
+2. **Install parsing dependencies**:
+   The transformer uses `acorn` to safely analyze code.
 
    ```bash
    npm install acorn acorn-walk acorn-jsx
    ```
 
-3. **Nota sul Runtime**:
-   Il sistema carica dinamicamente React, ReactDOM e Babel da CDN (`esm.sh`) all'interno della sandbox per garantire l'isolamento. Non è necessario installare `@babel/standalone` nel tuo progetto, ma è **richiesta una connessione internet** durante l'esecuzione dei test.
+3. **Runtime Note**:
+   The system dynamically loads React, ReactDOM, and Babel from CDN (`esm.sh`) inside the sandbox to ensure isolation. You do not need to install `@babel/standalone` in your project, but an **internet connection is required** during test execution.
 
-## 💻 Utilizzo
+## 💻 Usage
 
-Importa `TestComponent` e passagli l'oggetto `files` (File System Virtuale) e l'array dei test da eseguire.
+Import `TestComponent` and pass it the `files` object (Virtual File System) and the array of tests to execute.
 
 ```jsx
 import React from "react";
 import TestComponent from "./components/testing/TestComponent";
 
-// 1. Definizione del File System Virtuale
+// 1. Virtual File System Definition
 const virtualFiles = {
   "/MyComponent.jsx": {
     path: "/MyComponent.jsx",
@@ -76,7 +76,7 @@ const virtualFiles = {
   },
 };
 
-// 2. Render del componente
+// 2. Component Render
 export default function App() {
   return (
     <div className="h-screen w-full">
@@ -91,7 +91,7 @@ export default function App() {
 
 ## ⚙️ Props
 
-| Prop            | Tipo            | Default | Descrizione                                                                                       |
-| --------------- | --------------- | ------- | ------------------------------------------------------------------------------------------------- |
-| `files`         | `Object`        | `{}`    | Oggetto che mappa i percorsi dei file al loro contenuto.                                          |
-| `testFilePaths` | `Array<String>` | `[]`    | Array di stringhe contenente i percorsi dei file di test da eseguire. Devono esistere in `files`. |
+| Prop            | Type            | Default | Description                                                                            |
+| --------------- | --------------- | ------- | -------------------------------------------------------------------------------------- |
+| `files`         | `Object`        | `{}`    | Object mapping file paths to their content.                                            |
+| `testFilePaths` | `Array<String>` | `[]`    | Array of strings containing the paths of test files to execute. Must exist in `files`. |
