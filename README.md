@@ -1,126 +1,95 @@
-# AI-Powered Web IDE
+# React In-Browser Test Runner
 
-## 🤖 Guida per lo Sviluppo Assistito da AI
+Una suite di componenti React per eseguire test unitari direttamente nel browser. Include un motore di esecuzione (`TestComponent`) e un'interfaccia demo completa (`TestDemo`).
 
-Questa sezione contiene le istruzioni per assisterti nello sviluppo di questo progetto.
+## 🚀 Getting Started
 
-### La Tua Fonte di Verità
+Il componente principale per l'integrazione è `TestComponent`. Ecco come usarlo:
 
-La tua unica e sola fonte di verità per tutte le conoscenze specifiche di questo progetto è la cartella:
+```jsx
+import TestComponent from "./testing/TestComponent";
 
-```
-.llm-project-context/
-```
+// 1. Definisci i file (sorgente e test)
+const files = {
+  "/Button.jsx": { path: "/Button.jsx", content: "...", isFolder: false },
+  "/Button.test.jsx": {
+    path: "/Button.test.jsx",
+    content: "...",
+    isFolder: false,
+  },
+};
 
-Questa cartella contiene le regole, le definizioni e la documentazione che **hanno la precedenza** su qualsiasi tua conoscenza generica.
-
-### ⚠️ PROCEDURA OBBLIGATORIA DI INIZIALIZZAZIONE
-
-**IMPORTANTE**: Non procedere con alcuna generazione di codice prima di aver completato questa procedura.
-
-#### Step 1: Caricamento Contesto
-
-Leggi nell'ordine:
-
-1. `.ai-project-context/SYSTEM_PROMPT.md`
-2. `.ai-project-context/1_CODING_RULES.md`
-3. `.ai-project-context/2_TECH_STACK.md`
-4. `.ai-project-context/3_INTERNAL_KNOWLEDGE/`
-
-#### Step 2: Test di Comprensione (OBBLIGATORIO)
-
-Prima di procedere, **devi rispondere** a queste domande per dimostrare di aver letto attentamente:
-
-1. Qual è il componente UI predefinito per i bottoni in questo progetto?
-2. Quale framework devo usare per task complessi prima di scrivere codice?
-3. Elenca 3 anti-pattern da evitare secondo `1_CODING_RULES.md`
-4. Quali sono le librerie di state management approvate?
-5. Posso usare localStorage negli artifacts? Perché?
-
-**Formato risposta richiesto:**
-
-```
-✅ INIZIALIZZAZIONE COMPLETATA
-
-1. [risposta]
-2. [risposta]
-3. [risposta]
-4. [risposta]
-5. [risposta]
-
-Sono pronto per ricevere task di sviluppo.
+// 2. Renderizza il runner
+<TestComponent files={files} testFilePaths={["/Button.test.jsx"]} />;
 ```
 
-#### Step 3: Solo dopo il test
+## 📋 Prerequisiti
 
-Una volta superato il test, puoi iniziare a sviluppare.
+Per integrare questo componente, il progetto di destinazione deve utilizzare:
 
----
+- **React** (v16.8+ per il supporto agli Hooks)
+- **Tailwind CSS** (per lo styling dell'interfaccia)
+- **Vite** (consigliato per il supporto nativo agli import `?raw`) o un bundler configurato per caricare file come stringhe raw.
 
-Questo progetto è un ambiente di sviluppo web (IDE) sperimentale che integra un assistente AI avanzato. A differenza dei tradizionali chatbot, l'AI in questo ambiente può comprendere le richieste, analizzare il codice esistente e **agire direttamente sul file system del progetto** per creare, modificare ed eliminare file.
+## 🛠️ Installazione
 
-L'assistente è progettato per funzionare con diversi modelli di linguaggio di grandi dimensioni (LLM) come **Gemini** e **Claude**, rendendolo flessibile e potente.
+1. **Copia la cartella**: Copia l'intera directory `src/testing` nel tuo progetto (ad esempio in `src/components/testing`).
 
-## ✨ Caratteristiche Principali
+   File necessari:
+   - `TestDemo.jsx` (Componente UI principale)
+   - `TestComponent.jsx` (Runner dei test autonomo)
+   - `TestTransformer.js` (Gestione della compilazione/transpiling)
+   - `TestSandbox.js` (Ambiente di esecuzione isolato)
+   - `VitestCompatibleRunner.js` (Motore di test compatibile con Jest/Vitest)
 
-- **🤖 Agente AI Attivo**: L'AI non si limita a rispondere. Può eseguire azioni concrete come:
-  - `create_files`: Creare nuovi file con il contenuto specificato.
-  - `update_files`: Modificare file esistenti, fornendo il contenuto completo aggiornato.
-  - `delete_files`: Rimuovere file dal progetto.
-- **🧠 Analisi del Contesto**: L'AI può richiedere di leggere il contenuto di uno o più file (`read_file`) per raccogliere il contesto necessario prima di formulare un piano d'azione.
-- **⚙️ Refactoring Multi-File**: Gestisce attività complesse che coinvolgono più file (es. refactoring di un'API) attraverso un protocollo `start_multi_file` e `continue_multi_file`, garantendo che il task venga completato in modo sequenziale e controllato.
-- **🔌 Provider AI Configurabile**: Supporta nativamente diversi provider di AI. L'utente può scegliere il modello e fornire la propria chiave API.
-- **💬 Chat Persistente**: Le conversazioni con l'AI vengono salvate localmente utilizzando IndexedDB, permettendo di riprendere il lavoro in sessioni successive.
-- **🛡️ Parsing JSON Robusto**: Utilizza un sistema di sanitizzazione a più stadi (`extractAndSanitizeJson`) che impiega anche `JSON5` per interpretare correttamente le risposte dell'LLM, anche se non sono in formato JSON perfettamente standard.
+2. **Installa le dipendenze di parsing**:
+   Il trasformatore utilizza `acorn` per analizzare il codice in sicurezza.
 
-## 🚀 Architettura
+   ```bash
+   npm install acorn acorn-walk acorn-jsx
+   ```
 
-Il cuore del progetto è un sistema **Agente-Strumento** dove l'AI agisce come un "agente" che decide quale "strumento" utilizzare per portare a termine una richiesta.
+3. **Nota sul Runtime**:
+   Il sistema carica dinamicamente React, ReactDOM e Babel da CDN (`esm.sh`) all'interno della sandbox per garantire l'isolamento. Non è necessario installare `@babel/standalone` nel tuo progetto, ma è **richiesta una connessione internet** durante l'esecuzione dei test.
 
-1.  **Input Utente**: L'utente invia una richiesta tramite l'interfaccia di chat.
-2.  **Costruzione del Prompt Dinamico**: `useAIStore` costruisce un prompt di sistema dettagliato che include le regole del protocollo, le specifiche JSON e il contesto del file attivo.
-3.  **Ciclo di Interazione AI**: L'AI analizza la richiesta. Se ha bisogno di più contesto, usa lo strumento `read_file`. Una volta pronta, genera un JSON con un'azione (`update_files`, `start_multi_file`, etc.).
-4.  **Esecuzione dell'Azione**: La risposta JSON viene sanitizzata e validata. `useFileStore` esegue le operazioni richieste sul file system virtuale.
-5.  **Feedback all'Utente**: Il risultato dell'operazione viene mostrato nell'interfaccia di chat.
+## 💻 Utilizzo
 
-## 🛠️ Stack Tecnologico
+Importa `TestComponent` e passagli l'oggetto `files` (File System Virtuale) e l'array dei test da eseguire.
 
-- **Frontend**: React
-- **State Management**: Zustand
-- **Storage Locale**: IndexedDB
-- **Interazione AI**: Chiamate API dirette a provider come Google (Gemini) o Anthropic (Claude).
-- **Parsing Avanzato**: JSON5
+```jsx
+import React from "react";
+import TestComponent from "./components/testing/TestComponent";
 
-## 📦 Installazione e Avvio
+// 1. Definizione del File System Virtuale
+const virtualFiles = {
+  "/MyComponent.jsx": {
+    path: "/MyComponent.jsx",
+    isFolder: false,
+    content: `...`,
+  },
+  "/MyComponent.test.jsx": {
+    path: "/MyComponent.test.jsx",
+    isFolder: false,
+    content: `...`,
+  },
+};
 
-1.  **Clona il repository:**
+// 2. Render del componente
+export default function App() {
+  return (
+    <div className="h-screen w-full">
+      <TestComponent
+        files={virtualFiles}
+        testFilePaths={["/MyComponent.test.jsx"]}
+      />
+    </div>
+  );
+}
+```
 
-    ```bash
-    git clone https://github.com/tuo-utente/tuo-repo.git
-    cd tuo-repo
-    ```
+## ⚙️ Props
 
-2.  **Installa le dipendenze:**
-
-    ```bash
-    npm install
-    ```
-
-3.  **Configura le chiavi API:**
-    Il progetto richiede una chiave API per il provider AI che desideri utilizzare. Configura le variabili d'ambiente o inserisci la chiave direttamente nell'interfaccia utente dell'applicazione.
-
-4.  **Avvia il server di sviluppo:**
-    ```bash
-    npm run dev
-    ```
-
-## 🗺️ Roadmap Futura
-
-- **Ottimizzazione dei Token**: Implementare una strategia di riassunto del contesto per ridurre l'uso dei token.
-- **Miglioramenti UI/UX**: Aggiungere indicatori di caricamento, sezioni ridimensionabili e controlli per i messaggi.
-- **Importazione Progetto**: Aggiungere la funzionalità per importare un intero progetto da un file `.zip`.
-- **Supporto Multi-Linguaggio**: Specializzare i prompt per diversi linguaggi di programmazione.
-
-## 🤝 Contributi
-
-I contributi sono benvenuti! Se hai idee per nuove funzionalità o miglioramenti, sentiti libero di aprire una issue o una pull request.
+| Prop            | Tipo            | Default | Descrizione                                                                                       |
+| --------------- | --------------- | ------- | ------------------------------------------------------------------------------------------------- |
+| `files`         | `Object`        | `{}`    | Oggetto che mappa i percorsi dei file al loro contenuto.                                          |
+| `testFilePaths` | `Array<String>` | `[]`    | Array di stringhe contenente i percorsi dei file di test da eseguire. Devono esistere in `files`. |
