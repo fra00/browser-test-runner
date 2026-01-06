@@ -1,0 +1,80 @@
+/* Definizione delle variabili di tema */
+:root {
+  /* Tema Scuro (Default) */
+  --editor-bg: #1e1e1e;
+  --editor-darker: #1a1a1a;
+  --editor-foreground: #d4d4d4;
+  --editor-border: #4a5568;
+  --editor-highlight: #2a2d2e;
+
+  --card-bg: #252526;
+  --card-border-color: #3c3c3c;
+  --card-color: #cccccc;
+
+  --text-color: #cccccc;
+  --primary-color: #0e639c;
+  --button-bg: #0e639c;
+  --button-text: white;
+}
+
+[data-theme="light"] {
+  /* Tema Chiaro */
+  --editor-bg: #f9f9f9;
+  --editor-darker: #ffffff;
+  --editor-foreground: #111827;
+  --editor-border: #d1d5db;
+  --editor-highlight: #f3f4f6;
+
+  --card-bg: #ffffff;
+  --card-border-color: #e5e7eb;
+  --card-color: #111827;
+
+  --text-color: #111827;
+  --primary-color: #2563eb;
+  --button-bg: #2563eb;
+  --button-text: white;
+}
+
+
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
